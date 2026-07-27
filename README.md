@@ -1,153 +1,325 @@
 # 🤖 AI Lead Qualification Assistant
 
+An AI-powered Lead Qualification workflow built using **n8n**, **Google Gemini AI**, **Google Sheets**, **Google Calendar**, and **Gmail**.
+
+This workflow automatically analyses incoming leads, extracts business details using AI, qualifies them based on predefined criteria, stores qualified leads, schedules a discovery call, and notifies the sales team via email.
+
+---
+
 ## 📌 Project Overview
 
-The AI Lead Qualification Assistant is an automation workflow built using **n8n** that analyses incoming customer enquiries, extracts lead information using **Google Gemini AI**, qualifies the lead based on predefined business rules, stores qualified leads in **Google Sheets**, schedules a follow-up event in **Google Calendar**, and sends email notifications through **Gmail**.
+Manual lead qualification is time-consuming and inconsistent. This automation uses **Google Gemini AI** to intelligently evaluate incoming leads and route them automatically.
 
-The workflow reduces manual effort in lead management by automatically identifying high-quality business opportunities.
+### Workflow Summary
+
+```
+Webhook
+   │
+   ▼
+Google Gemini AI
+   │
+   ▼
+JavaScript Parser
+   │
+   ▼
+IF (Qualified?)
+   ├───────────────┐
+   │               │
+Qualified     Not Qualified
+   │               │
+   ▼               ▼
+Google Sheets   Gmail
+   │          (Manual Review)
+   ▼
+Google Calendar
+   │
+   ▼
+Gmail
+(Qualified Lead)
+```
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-- AI-powered lead information extraction
-- Automatic lead qualification
-- Lead scoring (0–100)
-- Priority assignment (High / Medium / Low)
-- Google Sheets integration
-- Google Calendar event creation
-- Gmail notifications
-- Human handoff for non-qualified leads
-- Multi-language prompt support (implemented)
+✅ AI-powered Lead Qualification
+
+✅ Automatic Lead Score Generation
+
+✅ Priority Classification (High / Medium /Low)
+
+✅ Google Sheets Integration
+
+✅ Google Calendar Meeting Creation
+
+✅ Gmail Notification
+
+✅ Human Handoff for Non-qualified Leads
+
+✅ REST API using n8n Webhook
+
+✅ Tested using Postman
 
 ---
 
-## 🛠 Technologies Used
+# 🛠 Tech Stack
 
-- n8n
+| Technology | Purpose |
+|------------|---------|
+| n8n | Workflow Automation |
+| Google Gemini AI | AI Lead Analysis |
+| Google Sheets | Lead Storage |
+| Google Calendar | Discovery Call Scheduling |
+| Gmail | Email Notifications |
+| Postman | API Testing |
+
+---
+
+# ⚙️ Workflow Explanation
+
+### 1. Webhook
+
+Receives incoming lead details through an HTTP POST request.
+
+---
+
+### 2. Google Gemini AI
+
+Extracts:
+
+- Name
+- Email
+- Company
+- Requirement
+- Budget
+- Timeline
+
+Generates:
+
+- Qualified / Not Qualified
+- Lead Score
+- Priority
+- Reason
+
+---
+
+### 3. JavaScript Code Node
+
+Parses Gemini's JSON response into structured data.
+
+---
+
+### 4. IF Node
+
+Checks:
+
+```
+Qualified == "Qualified"
+```
+
+If TRUE:
+
+- Save lead to Google Sheets
+- Create Google Calendar Event
+- Send Gmail Notification
+
+If FALSE:
+
+- Send Manual Review Email (Human Handoff)
+
+---
+
+# 📥 API Endpoint
+
+```
+POST
+```
+
+```
+https://ai-lead.app.n8n.cloud/webhook/03fc8b9a-54b7-49e3-842f-af59212b720d
+```
+
+---
+
+# 📤 Sample Request
+
+```json
+{
+  "message": "Hi, I'm Aarav Menon from IntelliCore Solutions. We need an AI-powered document processing workflow for our finance department. Budget is ₹12,00,000 and timeline is 5 months. Email: aarav.menon@intellicore.com"
+}
+```
+
+---
+
+# 📤 Sample AI Response
+
+```json
+{
+  "name": "Aarav Menon",
+  "email": "aarav.menon@intellicore.com",
+  "company": "IntelliCore Solutions",
+  "requirement": "AI-powered document processing workflow",
+  "budget": "₹12,00,000",
+  "timeline": "5 months",
+  "qualified": "Qualified",
+  "lead_score": 95,
+  "priority": "High",
+  "reason": "Lead satisfies qualification criteria."
+}
+```
+
+---
+
+# 📸 Screenshots
+
+## 🔹 n8n Workflow
+
+![Workflow](n8n.png)
+
+---
+
+## 🔹 Google Sheets
+
+Qualified leads are automatically stored.
+
+![Google Sheets](sheets.png)
+
+---
+
+## 🔹 Google Calendar
+
+Discovery Call is automatically scheduled.
+
+![Google Calendar](calendar.png)
+
+---
+
+## 🔹 Gmail Notification
+
+Qualified Lead Email
+
+![Qualified Mail](mail1.png)
+
+Manual Review Email
+
+![Manual Review](mail2.png)
+
+---
+
+## 🔹 Postman Testing
+
+Webhook tested successfully using Postman.
+
+![Postman](postman.png)
+
+---
+
+# 🧪 Testing
+
+The workflow has been tested successfully for:
+
+- ✅ Qualified Lead
+- ✅ Not Qualified Lead
+- ✅ Google Sheets Integration
+- ✅ Google Calendar Event Creation
+- ✅ Gmail Notification
+- ✅ Manual Review Email
+- ✅ Webhook Testing via Postman
+
+---
+
+# 👤 Human Handoff
+
+If the lead is **Not Qualified**:
+
+- No Calendar Event is created.
+- The lead is not processed as qualified.
+- A **Manual Review Email** is sent to the sales/admin team for further evaluation.
+
+This ensures that potentially valuable leads are not discarded without human review.
+
+---
+
+# 📂 Repository Structure
+
+```
+AI-Lead-Qualification-Assistant/
+│
+├── README.md
+├── AI Lead Qualification Assistant.json
+├── n8n.png
+├── sheets.png
+├── calendar.png
+├── mail1.png
+├── mail2.png
+└── postman.png
+```
+
+---
+
+# ⚙️ Setup Instructions
+
+1. Clone this repository.
+
+```
+git clone https://github.com/Mamidi-Pavani/AI-Lead-Qualification-Assistant.git
+```
+
+2. Import the workflow JSON into n8n.
+
+3. Configure credentials for:
+
 - Google Gemini AI
 - Google Sheets
 - Google Calendar
 - Gmail
-- JavaScript
-- Postman
+
+4. Activate the workflow.
+
+5. Send a POST request to the webhook using Postman.
 
 ---
 
-## 📊 Workflow Architecture
+# 📈 Future Improvements
 
-```
-Webhook
-      │
-      ▼
-Google Gemini AI
-      │
-      ▼
-JavaScript (Parse JSON)
-      │
-      ▼
-IF (Qualified?)
-      ├───────────────┐
-      │               │
-      ▼               ▼
-Google Sheets      Manual Review Email
-      │
-      ▼
-Google Calendar
-      │
-      ▼
-Qualified Lead Email
-```
-
----
-
-## 📋 Lead Qualification Rules
-
-A lead is marked as **Qualified** if at least **two** of the following conditions are satisfied:
-
-- Budget ≥ ₹1,00,000
-- Timeline ≤ 6 months
-- Requirement related to:
-  - AI
-  - Automation
-  - Software Development
-  - Chatbots
-  - Web Applications
-  - Mobile Applications
-
-The AI also generates:
-
-- Lead Score
-- Priority
-- Qualification Reason
-
----
-
-## 📂 Project Structure
-
-```
-AI-Lead-Qualification-Assistant
-│
-├── AI Lead Qualification Assistant.json
-├── README.md
-└── screenshots/
-```
-
----
-
-## ⚙️ Setup Instructions
-
-1. Import the workflow JSON into n8n.
-2. Configure Google Gemini API credentials.
-3. Connect Google Sheets.
-4. Connect Gmail.
-5. Connect Google Calendar.
-6. Activate the workflow.
-7. Test using Postman.
-
----
-
-## 🧪 Example Test
-
-### Input
-
-```json
-{
-  "message":"Hello, I'm Aarav Menon from IntelliCore Solutions. We need an AI-powered workflow automation system with a budget of ₹12,00,000 to be completed within 5 months."
-}
-```
-
-### Expected Output
-
-- Qualified Lead
-- Lead Score: 95
-- Priority: High
-- Google Sheet Updated
-- Calendar Event Created
-- Email Notification Sent
-
----
-
-## 📸 Screenshots
-
-(Add workflow, Gmail, Google Sheets, Calendar and Postman screenshots here.)
-
----
-
-## 🔮 Future Enhancements
-
-- CRM Integration
-- Slack / Microsoft Teams Notifications
-- Voice Input Support
+- CRM Integration (HubSpot / Salesforce)
+- Slack Notifications
+- WhatsApp Alerts
+- Voice-based Lead Input
 - Dashboard & Analytics
-- Database Integration
-- AI Memory
-- Advanced Multi-language Support
+- Multi-language AI Support
+- Follow-up Email Automation
 
 ---
 
-## 👩‍💻 Author
+# 🎥 Demo Video
+
+Demo Video:
+
+**To be added after recording.**
+
+---
+
+# 📁 Workflow File
+
+The exported n8n workflow is included in this repository.
+
+```
+AI Lead Qualification Assistant.json
+```
+
+---
+
+# 🔗 GitHub Repository
+
+https://github.com/Mamidi-Pavani/AI-Lead-Qualification-Assistant
+
+---
+
+# 👩‍💻 Author
 
 **Mamidi Pavani**
 
-AI & Automation Engineer Intern Assignment
+AI & Automation Engineer Internship Assignment
+
+Built using **n8n + Google Gemini AI + Google Workspace**
