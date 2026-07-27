@@ -1,0 +1,429 @@
+{
+  "name": "AI Lead Qualification Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "03fc8b9a-54b7-49e3-842f-af59212b720d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "cf27395f-906b-4554-a608-056506b62ede",
+      "name": "Webhook",
+      "webhookId": "03fc8b9a-54b7-49e3-842f-af59212b720d"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$json.body.message}}",
+        "options": {
+          "systemMessage": "You are an AI Lead Qualification Assistant for a software and AI solutions company.\n\nThe customer's message may be written in any language, including English, Hindi, Telugu, Tamil, Kannada, Malayalam, Marathi, Bengali, Gujarati, Punjabi, or any other language.\n\nYour job is to understand the customer's message, regardless of the language, and extract the following information:\n\n- Name\n- Email\n- Company\n- Business Requirement\n- Budget\n- Timeline\n\nAlways translate the extracted information into English before returning the JSON.\n\nAfter extracting the information:\n\n1. Determine whether the lead is Qualified or Not Qualified.\n\n2. Give a Lead Score between 0 and 100.\n\nQualification Rules:\n\n- Budget greater than or equal to ₹1,00,000 = Good\n- Timeline less than or equal to 6 months = Good\n- Business requirement related to AI, Automation, Software Development, Chatbots, Web Applications or Mobile Applications = Good\n\nIf two or more conditions are satisfied, mark the lead as Qualified.\n\nReturn ONLY valid JSON.\n\nThe JSON format must be exactly:\n\n{\n  \"name\":\"\",\n  \"email\":\"\",\n  \"company\":\"\",\n  \"requirement\":\"\",\n  \"budget\":\"\",\n  \"timeline\":\"\",\n  \"qualified\":\"\",\n  \"lead_score\":0,\n  \"priority\":\"\",\n  \"reason\":\"\"\n}\n\nPriority Rules:\n\nLead Score 80-100 = High\nLead Score 60-79 = Medium\nLead Score below 60 = Low\n\nImportant:\n- Always return the JSON fields in English.\n- Do not include markdown.\n- Do not include explanations outside the JSON.\n- Return only valid JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9e9d66db-4027-469b-a93f-7089a8865782",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "2a3ecacf-cb0d-48ea-99d3-9354cd48b217",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "H9aFx7EsUcpzV3gM",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiOutput = $input.first().json.output;\n\n// Convert the AI JSON string into a JavaScript object\nconst parsed = JSON.parse(aiOutput);\n\n// Return it as a normal n8n JSON item\nreturn [\n  {\n    json: parsed\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "00b9b178-5271-4e41-94da-672a83893dd4",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1HcBZHvxZ0gilP6nT9667wuCLVe-7GPnURtc5zxa3Q8g",
+          "mode": "list",
+          "cachedResultName": "AI Lead Qualification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HcBZHvxZ0gilP6nT9667wuCLVe-7GPnURtc5zxa3Q8g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HcBZHvxZ0gilP6nT9667wuCLVe-7GPnURtc5zxa3Q8g/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{$json.name}}",
+            "Email": "={{$json.email}}",
+            "Company": "={{$json.company}}",
+            "Requirement": "={{$json.requirement}}",
+            "Budget": "={{$json.budget}}",
+            "Timeline": "={{$json.timeline}}",
+            "Qualified": "={{$json.qualified}}",
+            "Lead Score": "={{$json.lead_score}}",
+            "Priority": "={{$json.priority}}",
+            "Reason": "={{$json.reason}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company",
+              "displayName": "Company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Requirement",
+              "displayName": "Requirement",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Qualified",
+              "displayName": "Qualified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Reason",
+              "displayName": "Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        864,
+        -16
+      ],
+      "id": "4375c480-fde1-4116-a75f-cfeee1bbac01",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kVyhQFN8FQpNXNe5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "78ab31c7-c81b-4933-b39e-759170e73dd5",
+              "leftValue": "={{$json.qualified}}",
+              "rightValue": "Qualified",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        704,
+        128
+      ],
+      "id": "56cd1f1a-7d46-43aa-8c1a-7c64b64d2e0d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "22pa1a0594@vishnu.edu.in",
+        "subject": "={{ \"New Qualified Lead - \" + $('Append row in sheet').item.json.Name }}",
+        "message": "=<h2>🎉 New Qualified Lead</h2>\n\n<p><strong>Name:</strong> {{ $('Append row in sheet').item.json.Name }}</p>\n\n<p><strong>Email:</strong> {{ $('Append row in sheet').item.json.Email }}</p>\n\n<p><strong>Company:</strong> {{ $('Append row in sheet').item.json.Company }}</p>\n\n<p><strong>Requirement:</strong> {{ $('Append row in sheet').item.json.Requirement }}</p>\n\n<p><strong>Budget:</strong> {{ $('Append row in sheet').item.json.Budget }}</p>\n\n<p><strong>Timeline:</strong> {{ $('Append row in sheet').item.json.Timeline }}</p>\n\n<p><strong>Lead Score:</strong> {{ $('Append row in sheet').item.json[\"Lead Score\"] }}</p>\n\n<p><strong>Priority:</strong> {{ $('Append row in sheet').item.json.Priority }}</p>\n\n<p><strong>Reason:</strong> {{ $('Append row in sheet').item.json.Reason }}</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1168,
+        -16
+      ],
+      "id": "5da4c87d-e79d-4d86-aaf6-d458a1326564",
+      "name": "Send a message",
+      "webhookId": "371030c8-6ca8-4210-b55e-6457459e4873",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dE8SZ6XmZxJ33qwg",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "22pa1a0594@vishnu.edu.in",
+        "subject": "={{ \"Manual Review Required - \" + $json.name }}",
+        "message": "=<h2>⚠️ Lead Requires Manual Review</h2>\n\n<p><strong>Name:</strong> {{$json.name}}</p>\n\n<p><strong>Email:</strong> {{$json.email}}</p>\n\n<p><strong>Company:</strong> {{$json.company}}</p>\n\n<p><strong>Requirement:</strong> {{$json.requirement}}</p>\n\n<p><strong>Budget:</strong> {{$json.budget}}</p>\n\n<p><strong>Timeline:</strong> {{$json.timeline}}</p>\n\n<p><strong>Qualification:</strong> {{$json.qualified}}</p>\n\n<p><strong>Reason:</strong> {{$json.reason}}</p>\n\n<p>This lead did not meet the automatic qualification criteria and should be reviewed manually.</p>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        224
+      ],
+      "id": "e122c078-331b-4c86-8fee-5578010b14df",
+      "name": "Send a message1",
+      "webhookId": "71e395f1-9496-4cff-af2c-fcd10994959d",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dE8SZ6XmZxJ33qwg",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "mamidipavani84@gmail.com",
+          "mode": "list",
+          "cachedResultName": "mamidipavani84@gmail.com"
+        },
+        "start": "={{ $now.plus({ days: 1 }) }}",
+        "end": "={{ $now.plus({ days: 1, minutes: 30 }) }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ $json.Email }}"
+          ],
+          "description": "={{\n`Lead Name: ${$json.Name}\n\nCompany: ${$json.Company}\n\nRequirement: ${$json.Requirement}\n\nBudget: ${$json.Budget}\n\nTimeline: ${$json.Timeline}\n\nLead Score: ${$json[\"Lead Score\"]}\n\nPriority: ${$json.Priority}`\n}}",
+          "summary": "={{ \"Discovery Call - \" + $json.Name }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1024,
+        -16
+      ],
+      "id": "23456fc4-6928-4956-9fb0-07d9cac8559c",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "K7CRNzjzGW1fDRgF",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create an event": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2fe19363-c36d-43d2-a07a-90832bd435ca",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "b3b563da46aa748be00fa8e3731383d3ffe268b15f72f655020d720916bcfcad"
+  },
+  "nodeGroups": [],
+  "id": "uNHkTSayElMiWkq2",
+  "tags": []
+}
