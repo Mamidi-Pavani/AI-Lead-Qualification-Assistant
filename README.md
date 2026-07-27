@@ -148,6 +148,6 @@ AI-Lead-Qualification-Assistant
 
 ## 👩‍💻 Author
 
-**Mamidi Manjulapavani**
+**Mamidi Pavani**
 
 AI & Automation Engineer Intern Assignment
