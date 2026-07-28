@@ -296,7 +296,7 @@ git clone https://github.com/Mamidi-Pavani/AI-Lead-Qualification-Assistant.git
 
 Demo Video:
 
-**To be added after recording.**
+https://drive.google.com/file/d/1Rrpt6woKndqAIvlnbImyPjdq6e6GgxQb/view?usp=sharing
 
 ---
 
